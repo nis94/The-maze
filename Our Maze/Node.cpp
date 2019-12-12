@@ -1,6 +1,6 @@
 #include "Node.h"
 
-Node::Node(const Point& p, Node* ptr) : m_point(p.getX(), p.getY()) //Why default values 0,0 from point c'tor not working?
+Node::Node(const Point& p, Node* ptr) : m_point(p.getX(), p.getY()) 
 {
 	this->m_next = ptr;
 }
