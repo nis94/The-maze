@@ -2,10 +2,6 @@
 //Test1
 //#define _CRT_SECURE_NO_WARNINGS
 #include "Board.h"
-
-
-
-
 #include "Maze.h"
 #include "Utils.h"
 #include "Stack.h"
