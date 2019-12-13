@@ -30,7 +30,7 @@ public:
 	Maze() = delete;
 	Maze(Board* board);
 	//Maze(int height, int width, const char** board);
-	//~Maze();
+	~Maze();
 	//copy c'tor?
 
 // Setters

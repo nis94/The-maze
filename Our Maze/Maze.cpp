@@ -10,6 +10,11 @@ Maze::Maze(Board* board)
 {
 	m_board = board;
 }
+Maze::~Maze()
+{
+	// CHECK:
+	cout << "MAZE D'TOR \n";
+}
 
 
 // ------------------------ CONST METHODS ------------------------ //
@@ -79,23 +84,23 @@ It checks in this order: right, down, left, up.
 */
 {
 	Queue q(m_board->height, m_board->width); // CHANGE SO THAT Q RECEIVES 1 PARAMETER AND THE MULTIPLICATION OCCURS HERE OUTSIDE
-	int counter = 1;
+	int counter = 0;
 	while (q.isEmpty() == false)
 	{
 		cout << "Round " << counter++ << endl;
 		m_board->show();
 		Point p = q.DeQueue();	//	Remove head.
 
-		m_board->setPointVisited(p);	//	Set the point to visited.
+		m_board->setPointVisited(p);	//	Set the point to visited ($).
 
-		if (p.getX() == m_board->width - 1 && p.getY() == m_board->height - 2) // If exit point. MAKE SURE THE CALCULATION IS CORRECT
+		if (p.getX() == m_board->width - 1 && p.getY() == m_board->height - 2) //Nir: (LAXURY) Use ==operator *****************************************************************************************************
 			return;
 		//	Else: Not the exit point - now we must add all not-yet-visited-points surrounding the point we got.
 		int nextX, nextY;
 
-		for (int i = 0; i < MAX_NEIGHBORS; i++)
+		for (int i = 0; i < MAX_NEIGHBORS; i++) 
 		{
-			Point neighborP = p + i;	//	i indications direction, see Point operator+
+			Point neighborP = p + i;	//	i indications direction, according to Point::operator+
 			int x = neighborP.getX();
 			int y = neighborP.getY();
 			if (m_board->coordinateInRange(x, y) && m_board->isEmptySpace(x, y))

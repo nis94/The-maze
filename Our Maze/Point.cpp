@@ -70,11 +70,13 @@ bool Point::rangeCheck(int height, int width)const
 {
 	bool x_pos = true, y_pos = true;
 
-	if (this->x >= width || this->x < 1) { x_pos = false; }
+	//Check that the Point within Board Sizes:
 
-	if (this->y >= height || this->y < 1) { y_pos = false; }
+	if (this->x > width-1 || this->x < 0) { x_pos = false; } 
 
-	return (x_pos && y_pos); //check on example
+	if (this->y > height-1 || this->y < 0) { y_pos = false; } 
+
+	return (x_pos && y_pos); 
 }
 
 

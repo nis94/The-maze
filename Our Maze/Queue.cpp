@@ -10,7 +10,7 @@ Queue::Queue(int mazeHeight, int mazeWidth)
 
 	head = 0;
 	tail = -1;
-	EnQueue(Point(1, 1));	//	Initialize the queue with a first point at 1,1.
+	EnQueue(Point(0, 1));	//	Initialize the queue with the entrance point at 0,1.
 }
 
 

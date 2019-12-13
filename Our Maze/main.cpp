@@ -1,5 +1,3 @@
-//Test2
-//Test1
 //#define _CRT_SECURE_NO_WARNINGS
 #include "Board.h"
 #include "Maze.h"
@@ -17,6 +15,7 @@ const unsigned short int RANDOM = 2;	//	User choice in maze creation.
 
 // ------------------------ STATIC FUNCTIONS ------------------------ //
 // SUGGESTION: move all these functions to Source?
+
 int chooseCreationMethod();
 void makeCustomBoard(Maze& maze);
 void chooseParameters(int& height, int& width, int creationMethod);
@@ -26,24 +25,25 @@ char** allocateBoard(int height, int width);
 // ------------------------ MAIN ------------------------ //
 int main()
 {
-	int creationMethod = chooseCreationMethod(); // User choose if to create maze himself, or randomly
+	int creationMethod = chooseCreationMethod();// User choose if to create maze himself, or randomly
 
 	int height, width;
 	chooseParameters(height, width, creationMethod); // Read parameters. We send them to the functions tasked with making the board (custom or rand). Parameters are read differently based on whether or not user chose to create randomly or create himself (rand means only odd parameters).
 
 	Board board(height, width);
 	Maze maze(&board);
-
+	
 	if (creationMethod == CUSTOM)
 		makeCustomBoard(maze);
 	else // User chose random creation.
 		board.makeRandBoard();
-
-	maze.printBoard();
+		
 	maze.escapeMaze();
+
+	cout << "The reasult is: \n\n";
 	maze.printBoard();
 
-	system("pause"); // Eli: I tried this because the console kept closing, making it tough to see final results for debugging. Didn't work :(
+	//system("pause"); // Eli: I tried this because the console kept closing, making it tough to see final results for debugging. Didn't work :(
 }
 
 
@@ -58,7 +58,7 @@ Function is only about input of the decision.
 */
 {
 	int option;
-	cout << "Please choose one option:\t\n1) Make my maze\n\t2) Make a random maze for me\n\n";
+	cout << "Please choose one option:\n\t1) Make my maze\n\t2) Make a random maze for me\n\n";
 	cin >> option;
 	while (option < 1 || option > 2)
 	{
@@ -87,7 +87,6 @@ void makeCustomBoard(Maze& maze)
 	{
 		// char row[MAX_COL]; // QUESTION: maybe allocate string based on width, and read based on that?
 		cin.getline(board[i], maze.getWidth() + 1);
-
 		if (strlen(board[i]) < (unsigned)maze.getWidth())
 		{
 			cout << "Row is shorter than is required. Invalid input.\n";
@@ -130,26 +129,6 @@ In this function, the user chooses the parameters for his maze.
 		cin >> width;
 	}
 }
-
-
-// Old functions to delete
-//char** allocateBoard(int height, int width)
-//{
-//	char** board;
-//
-//	// Allocate board based on received parameters height and width
-//	board = new char*[height]; // rows
-//	if (!board) // Allocation check.
-//		exit(1);
-//	for (int i = 0; i < height; i++)
-//	{
-//		board[i] = new char[width]; // columns
-//		if (!board[i]) // Allocation check.
-//			exit(1);
-//	}
-//	return board;
-//}
-
 
 
 /* General notes:

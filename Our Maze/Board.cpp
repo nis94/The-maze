@@ -16,7 +16,7 @@ Board::Board(int height, int width)
 		exit(1);
 	for (int i = 0; i < height; ++i)
 	{
-		board[i] = new char[width];
+		board[i] = new char[width+1]; // NIR: added place for '\0'
 		if (!board[i])	//	Allocation check
 			exit(1);
 	}
@@ -24,8 +24,11 @@ Board::Board(int height, int width)
 Board::~Board()
 {
 	for (int i = 0; i < height; ++i)
-		delete[]board[i];
+		delete[](board[i]);
 	delete[] board;
+
+	// CHECK:
+	cout << "BOARD D'TOR";
 }
 
 
@@ -99,9 +102,9 @@ We continue until the stack is empty.
 {
 	srand((unsigned int)time(NULL));
 
-	if (height % 2 == 0 || width % 2 == 0)	//	Random board can only be made with odd values on both height and width
-		return false;
-	setStartingRandBoard();		//	Starting board is a board with "boxes" of walls and spaces in the center of each box.
+	//if (height % 2 == 0 || width % 2 == 0)	// Nir:	I think we already take care of this check on the main *******************************************************************************************************************************
+	//	return false;
+	setStartingRandBoard();		//	Starting board is a board with "boxes" of walls and spaces in the center of each box. spaces at the Entrance and Exit as well
 
 	Stack stack;
 	stack.push(Point(1, 1));	// Start the stack with point (1,1).
@@ -113,7 +116,7 @@ We continue until the stack is empty.
 		Point currP = stack.pop();		//	Remove top from stack.
 		board[currP.getY()][currP.getX()] = VISITED;	//	Mark on board that we've visited this point.
 
-		int unvisitedNeighArr[MAX_NEIGHBORS];	//	Set an array that will indicate how many free neighbors we have, and where (thanks to the enum).
+		int unvisitedNeighArr[MAX_NEIGHBORS];	//	Set an array that will indicate how many free neighbors we have, and where (using enum).
 		int numOfUnvisitedNeighbors = 0;
 		findFreeNeighbors(currP, unvisitedNeighArr, numOfUnvisitedNeighbors);
 
@@ -179,10 +182,10 @@ It creates a board built of "squares of walls", 3x3 squares with empty spaces in
 */
 {
 	// Set the borders
-	for (int i = 0; i < width; i++)		//	Top and bottom rows
+	for (int i = 0; i < width; i++)		//	Top and Bottom rows
 		board[0][i] = board[height - 1][i] = WALL;
 
-	for (int j = 0; j < height; j++)
+	for (int j = 0; j < height; j++)   //	Left and Right rows
 		board[j][0] = board[j][width - 1] = WALL;
 
 	// Go over "inner" rows (within the borders)
@@ -209,22 +212,15 @@ It creates a board built of "squares of walls", 3x3 squares with empty spaces in
 }
 void Board::findFreeNeighbors(Point& currP, int* unvisitedNeighArr, int& numOfUnvisitedNeighbors)
 {
-	numOfUnvisitedNeighbors = 0;
+	/*numOfUnvisitedNeighbors = 0; */ // Already with the value 0 ****************************************************************************************************************************************************************************
 	for (int i = 0; i < MAX_NEIGHBORS; i++)
 	{
 		Point p = currP + i;	//	i is RIGHT, DOWN, LEFT or UP, based on the enum in Point class
 		p = p + i; // Add another to create a distance of 2
 
 
-		if (p.rangeCheck(height, width) == true)	//	Check if point is within dimensions.
-		{
-
-			if (board[p.getY()][p.getX()] == EMPTY_SPACE)	//	Check if point on board is empty
-			{
-				unvisitedNeighArr[numOfUnvisitedNeighbors] = i; // the i through the enum indicates which neighbor
-				numOfUnvisitedNeighbors++;
-			}
-		}
+		if (p.rangeCheck(height, width) == true && board[p.getY()][p.getX()] == EMPTY_SPACE)	//	Check if point is within dimensions and if she is empty.
+				unvisitedNeighArr[numOfUnvisitedNeighbors++] = i;                              // the i through the enum indicates which neighbor
 	}
 }
 Point& Board::wallToRemove(Point& currP, Point& neighborP)
