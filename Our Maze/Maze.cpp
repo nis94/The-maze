@@ -87,25 +87,27 @@ It checks in this order: right, down, left, up.
 	int counter = 0;
 	while (q.isEmpty() == false)
 	{
+		Point p = q.DeQueue();	//	Remove head.
+		if (m_board->isEmptySpace(p.getX(), p.getY()))
+		{
 		cout << "Round " << counter++ << endl;
 		m_board->show();
-		Point p = q.DeQueue();	//	Remove head.
+			m_board->setPointVisited(p);	//	Set the point to visited ($).
 
-		m_board->setPointVisited(p);	//	Set the point to visited ($).
+				if (p.getX() == m_board->width - 1 && p.getY() == m_board->height - 2) //Nir: (LAXURY) Use ==operator *****************************************************************************************************
+					return;
+				//	Else: Not the exit point - now we must add all not-yet-visited-points surrounding the point we got.
+					int nextX, nextY;
 
-		if (p.getX() == m_board->width - 1 && p.getY() == m_board->height - 2) //Nir: (LAXURY) Use ==operator *****************************************************************************************************
-			return;
-		//	Else: Not the exit point - now we must add all not-yet-visited-points surrounding the point we got.
-		int nextX, nextY;
-
-		for (int i = 0; i < MAX_NEIGHBORS; i++) 
-		{
-			Point neighborP = p + i;	//	i indications direction, according to Point::operator+
-			int x = neighborP.getX();
-			int y = neighborP.getY();
-			if (m_board->coordinateInRange(x, y) && m_board->isEmptySpace(x, y))
-				q.EnQueue(neighborP);
-		}
+				for (int i = 0; i < MAX_NEIGHBORS; i++)
+				{
+					Point neighborP = p + i;	//	i indications direction, according to Point::operator+
+					int x = neighborP.getX();
+					int y = neighborP.getY();
+					if (m_board->coordinateInRange(x, y) && m_board->isEmptySpace(x, y))
+						q.EnQueue(neighborP);
+				}
+		}//if
 	}//while
 }//escapeMaze
 /*
