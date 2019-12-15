@@ -1,4 +1,11 @@
 //#define _CRT_SECURE_NO_WARNINGS
+
+/*
+
+hi nir you are a special snowflake this is our maze
+
+
+*/
 #include "Board.h"
 #include "Maze.h"
 #include "Utils.h"
