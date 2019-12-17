@@ -11,24 +11,23 @@ class Point
 	int y;              // Row ^
 
 public:
-	enum eNeighbours { RIGHT, DOWN, LEFT, UP }; // Use then at + operator
+	enum eNeighbours { RIGHT, DOWN, LEFT, UP }; // Use them at + operator
 
 // Constructors
 	Point(int x = 0, int y = 0);
 
-	// Operators
-	const Point& operator+(int direction) const; // This is the signature that we want to the operator? ---- Do we wat also (int)+(point) ?
+// Operators
+	Point operator+(int direction) const;
 
 // Setters
 	bool setX(int x);
 	bool setY(int y);
 
-	// Getters
-	int getX() const;
-	int getY() const;
+// Getters
+	inline int getX() const { return x; }
+	inline int getY() const { return y; }
 
 public:
 	bool rangeCheck(int height, int width)const;
-	//Point& chooseRandNeighbor()const;
 };
 #endif // !__POINT_H

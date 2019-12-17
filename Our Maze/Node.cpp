@@ -31,15 +31,6 @@ bool Node::setNext(Node* next)
 
 
 
-const Point& Node::getPoint() const
-{
-	return m_point;
-}
-const Node* Node::getNext() const
-{
-	return m_next;
-}
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 void Node::insertAfter(Node* new_node)
 {

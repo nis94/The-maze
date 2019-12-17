@@ -1,16 +1,21 @@
-//#define _CRT_SECURE_NO_WARNINGS
+/*            ------------ MAGNIFICENT MAZE ------------ 
+Nir Bar Levav	205489651
+Eli Harel		200133304
 
-/*
+This program creates a maze and solves it.
+The user chooses the dimensions and then decides whether to create the maze randomly based on them,
+Or if to design one himself.
 
-hi nir you are a special snowflake this is our maze
+The random creation of the maze uses a Stack, the solution of a maze uses a circular Queue.
 
-
+Note to dear tester: When we perform an exit due to invalid input, we were unsure how to handle all the allocations in the 
 */
+
 #include "Board.h"
 #include "Maze.h"
-#include "Utils.h"
 #include "Stack.h"
 #include "Point.h"
+#include <string.h>
 #include <iostream>
 using namespace std;
 
@@ -20,24 +25,18 @@ const unsigned short int CUSTOM = 1;	//	User choice in maze creation.
 const unsigned short int RANDOM = 2;	//	User choice in maze creation.
 
 
-// ------------------------ STATIC FUNCTIONS ------------------------ //
-// SUGGESTION: move all these functions to Source?
-
 int chooseCreationMethod();
 void makeCustomBoard(Maze& maze);
 void chooseParameters(int& height, int& width, int creationMethod);
-char** allocateBoard(int height, int width);
 
 
 // ------------------------ MAIN ------------------------ //
 int main()
 {
-	int creationMethod = chooseCreationMethod();// User choose if to create maze himself, or randomly
-
+	int creationMethod = chooseCreationMethod();	// User chooses if to create maze himself, or randomly
 	int height, width;
 	chooseParameters(height, width, creationMethod); // Read parameters. We send them to the functions tasked with making the board (custom or rand). Parameters are read differently based on whether or not user chose to create randomly or create himself (rand means only odd parameters).
-
-	Board board(height, width);
+	Board board(height, width); // Create board based on parameters
 	Maze maze(&board);
 	
 	if (creationMethod == CUSTOM)
@@ -45,12 +44,10 @@ int main()
 	else // User chose random creation.
 		board.makeRandBoard();
 		
-	maze.escapeMaze();
-
-	cout << "The reasult is: \n\n";
-	maze.printBoard();
-
-	//system("pause"); // Eli: I tried this because the console kept closing, making it tough to see final results for debugging. Didn't work :(
+	if (maze.escapeMaze())
+		maze.printBoard();
+	else
+		cout << "no solution\n";
 }
 
 
@@ -65,7 +62,7 @@ Function is only about input of the decision.
 */
 {
 	int option;
-	cout << "Please choose one option:\n\t1) Make my maze\n\t2) Make a random maze for me\n\n";
+	cout << "Maze: 1) From input 2) Random\n";
 	cin >> option;
 	while (option < 1 || option > 2)
 	{
@@ -77,44 +74,49 @@ Function is only about input of the decision.
 }
 
 void makeCustomBoard(Maze& maze)
+/*
+In this function the user designs his board himself.
+The function also performs checks for the board created:
+	-	Did he insert invalid chars?
+	-	Did he create proper borders?
+	-	Did he create exit and entrance points?
+	-	Did he create rows with the designated width\len?
+*/
 {
-
 	char** board = maze.getBoard()->getMat();
-	//char** tempBoard = new char*[board.getHeight()];
-	////ALLOCATION CHECK
-	//for (int i = 0; i < board.getHeight(); i++)
-	//{
-	//	tempBoard[i] = new char[board.getWidth()];
-	//	//ALLOCATION CHECK
-	//}
-
-	cin.ignore();
-	cout << "Please enter your maze:\n\n";
-	for (int i = 0; i < maze.getHeight(); i++)
+	cin.ignore();	//	Remove \n from buffer 
+	for (int i = 0; i < maze.getHeight(); i++) // Go over all rows
 	{
-		// char row[MAX_COL]; // QUESTION: maybe allocate string based on width, and read based on that?
-		cin.getline(board[i], maze.getWidth() + 1);
-		if (strlen(board[i]) < (unsigned)maze.getWidth())
+		cin.getline(board[i], maze.getWidth() + 1); // Read each row
+		int width = strlen(board[i]); // Check len of row user chose
+		if (width < (unsigned)maze.getWidth()) // Compare row of input to expected row length
 		{
-			cout << "Row is shorter than is required. Invalid input.\n";
-			// How to deal with longer rows?
-			exit(1);
+			cout << "invalid input\n";
+			exit(1);	
 		}
-
+		for (int j = 0; j < width; j++) // Check invalid chars within the row
+		{
+			if (board[i][j] != EMPTY_SPACE && board[i][j] != WALL)
+			{
+				cout << "invalid input\n";
+				exit(1);
+			}
+		}
 	}
 
-	// Finished reading a board of proper length. 
-	//	board.setNewBoard(tempBoard, board.getHeight(), board.getWidth());
-
+	if (!maze.checkBoard()) // Check if the borders are correct
+	{	
+		cout << "invalid input\n";
+		exit(1);
+	}
 }
 
 void chooseParameters(int& height, int& width, int creationMethod)
 /*
 In this function, the user chooses the parameters for his maze.
+If the creation method chosen is random, then the parameters must be odd.
 */
 {
-	//int height;
-	cout << "Please enter the number of rows for the maze, from 3 to 25: ";
 	cin >> height;
 	while (height < 3 || height>25 || (creationMethod == RANDOM && height % 2 == 0))	//	 Height range validity check.
 	{
@@ -125,8 +127,6 @@ In this function, the user chooses the parameters for his maze.
 	}
 	cout << endl;
 
-	//int width;
-	cout << "Please enter the number of columns for the maze, from 3 to 80: ";
 	cin >> width;
 	while (width < 3 || width>80 || (creationMethod == RANDOM && width % 2 == 0))	//	Width range validity check.
 	{
@@ -136,13 +136,3 @@ In this function, the user chooses the parameters for his maze.
 		cin >> width;
 	}
 }
-
-
-/* General notes:
-
-When user creates his own custom maze - do we need to check that he actually allows a way to the exit?
-If not,  meaning if he can create an unsolvable maze, we need our escapeMaze method to know how to deal with that too.
-Maybe something to do about when the queue is empty/full (meaning no more points to visit?)
-*/
-
-// Nir: I think we need to verify all of the invalid cases that user can do when he creates his own maze 

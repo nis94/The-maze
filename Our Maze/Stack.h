@@ -18,7 +18,7 @@ public:
 	void makeEmpty();
 	bool isEmpty();
 	void push(const Point& point);
-	Point& pop();
-	Point& top(); // const?
+	Point pop();
+	const Point& top(); 
 };
 #endif // !__STACK_H

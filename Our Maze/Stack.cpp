@@ -13,9 +13,7 @@ Stack::~Stack()
 {
 	makeEmpty();
 }
-///////////////////////////////////////////////////////////////////////////////////
-//Get & Set is push & pop ?
-///////////////////////////////////////////////////////////////////////////////////
+
 void Stack::makeEmpty()
 {
 	Node* temp;
@@ -37,7 +35,7 @@ void Stack::push(const Point& point)
 	this->m_top = new Node(point, this->m_top);
 }
 
-Point& Stack::pop()
+Point Stack::pop()
 {
 	if (isEmpty()) { cout << "Error! Stack UnderFlow"; exit(1); }
 
@@ -47,7 +45,7 @@ Point& Stack::pop()
 	delete temp;
 	return p;
 }
-Point& Stack::top()
+const Point& Stack::top()
 {
 	return (this->m_top->m_point);
 }

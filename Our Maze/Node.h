@@ -17,13 +17,13 @@ public:
 	inline bool			setPoint(Point& p);
 	inline bool			setNext(Node* next);
 
-	inline const Point&		getPoint()			const;
-	inline const Node*		getNext()			const;
+	inline const Point&		getPoint()			const { return m_point; }
+	inline const Node*		getNext()			const { return m_next; }
 
 public:
 	void				insertAfter(Node* new_node);
-	Node*				deleteAfter(void); //?
+	Node*				deleteAfter(void); 
 
-	friend class Stack; // Like that?
+	friend class Stack; 
 };
 #endif // !__NODE_H

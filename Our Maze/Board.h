@@ -20,7 +20,7 @@ private:
 	// Private Methods
 	void setStartingRandBoard();	//	A function to set a starting board of 3x3 squares of walls, with empty spaces in the middle. It's prepartion for making arandom board.
 	void findFreeNeighbors(Point& currP, int* unvisitedNeighArr, int& numOfUnvisitedNeighbors);
-	Point& wallToRemove(Point& currP, Point& neighborP);
+	Point wallToRemove(Point& currP, Point& neighborP);
 	int maxNum(int a, int b);
 
 public:
@@ -31,8 +31,8 @@ public:
 
 	// Const Methods
 	void show() const;
-	int getHeight() const;
-	int getWidth() const;
+	inline int getHeight() const { return height; }
+	inline int getWidth() const { return width; }
 	bool isEmptySpace(int x, int y) const;
 	bool coordinateInRange(int x, int y) const;
 	char** getMat() { return board; }
@@ -40,7 +40,6 @@ public:
 
 	// Non-const Methods
 	bool setNewBoard(char** newBoard, int newHeight, int newWidth);
-	bool makeCustomBoard();
 	bool makeRandBoard();
 	bool setPointVisited(const Point& p);
 	bool setPointVisited(int x, int y);

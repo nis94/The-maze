@@ -4,9 +4,10 @@
 
 Queue::Queue(int mazeHeight, int mazeWidth)
 {
-	m_size = mazeHeight * mazeWidth;	//	Determine size of queue.
-	m_pArr = new Point[m_size]; // PROBLEM: Make sure calculation for array size is correct.
-	// Check allocation
+	m_size = mazeHeight * mazeWidth;	//	Determine size of queue. We need to cover all the board, and while the algorithm of solving a maze might add the same point twice, if we haven't visited it yet, we also remove points, so a queue of this size won't fill up, given the maximum dimensions here.
+	m_pArr = new Point[m_size]; 
+	if (!m_pArr) // Check allocation
+		exit(1);
 
 	head = 0;
 	tail = -1;
@@ -44,7 +45,7 @@ const Point& Queue::Front() const	// Show the first item, without removing.
 {
 	if (isEmpty())
 	{
-		exit(EMPTY_QUEUE);	//	MAKE THIS BETTER
+		exit(EMPTY_QUEUE);	
 	}
 	return (m_pArr[head]);
 }
@@ -60,7 +61,7 @@ bool Queue::EnQueue(const Point& p)	//	Insert point to the end\tail
 	return true;
 }
 
-Point& Queue::DeQueue()	//	Remove and return head.
+Point Queue::DeQueue()	//	Remove and return head.
 {
 	if (isEmpty())
 		exit(EMPTY_QUEUE);
@@ -68,7 +69,4 @@ Point& Queue::DeQueue()	//	Remove and return head.
 	Point& res = m_pArr[head];	//	Take the head.
 	head = addOne(head);	//	Advance head index.
 	return res;
-
-	// QUESTION: can we save a constructor by first having some temp index, and then using a move constructor in the return line for res?
-	// Instead of creating res before?
 }

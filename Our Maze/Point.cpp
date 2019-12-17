@@ -9,15 +9,9 @@ Point::Point(int x, int y)
 }
 
 /*----------------------------------------------operators------------------------------------------------*/
-
-
-const Point& Point::operator+(int direction) const
+Point Point::operator+(int direction) const
 /*
-PROBLEM: it's unintuitive that + operation adds 2 instead of 1
-This function exists only for the creation of a random maze, so we add 2 values instead of 1 because of the algorithm
-But maybe because it's unintuitive it should be located somewhere else, or given a different name?
-
-
+This operator returns a new point, made by the current point's coordinates as well as the chosen diretion.
 For DOWN we add 1 and for UP we subtract 1 because of how we view the matrix (upper row is 0, then lower rows increase in value)
 */
 {
@@ -45,21 +39,7 @@ bool Point::setX(int x)
 bool Point::setY(int y)
 {
 	this->y = y;
-
-	bool flag = true;
-	//boolian check
-	return flag;
-}
-
-
-/*----------------------------------------------getters------------------------------------------------*/
-int Point::getX()const
-{
-	return this->x;
-}
-int Point::getY()const
-{
-	return this->y;
+	return true;
 }
 
 

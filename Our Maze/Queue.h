@@ -25,7 +25,7 @@ public:
 	void				MakeEmpty();
 	bool				isEmpty()		const;
 	bool				EnQueue(const Point& p);	//	Add p to end of queue.
-	Point&				DeQueue();					//	Remove from start of queue.
+	Point				DeQueue();					//	Remove from start of queue.
 	const Point&		Front()			const;
 };
 #endif 

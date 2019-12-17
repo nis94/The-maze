@@ -1,6 +1,6 @@
 #include "Board.h"
 #include "Stack.h"
-
+#include <string.h>
 #include <time.h>
 #include <iostream>
 using namespace std;
@@ -16,7 +16,7 @@ Board::Board(int height, int width)
 		exit(1);
 	for (int i = 0; i < height; ++i)
 	{
-		board[i] = new char[width+1]; // NIR: added place for '\0'
+		board[i] = new char[width+1]; 
 		if (!board[i])	//	Allocation check
 			exit(1);
 	}
@@ -26,9 +26,6 @@ Board::~Board()
 	for (int i = 0; i < height; ++i)
 		delete[](board[i]);
 	delete[] board;
-
-	// CHECK:
-	cout << "BOARD D'TOR";
 }
 
 
@@ -45,14 +42,6 @@ void Board::show() const
 		cout << endl;
 	}
 	cout << endl;
-}
-int	Board::getHeight() const
-{
-	return height;
-}
-int	Board::getWidth() const
-{
-	return width;
 }
 bool Board::isEmptySpace(int x, int y) const
 {
@@ -102,17 +91,15 @@ We continue until the stack is empty.
 {
 	srand((unsigned int)time(NULL));
 
-	//if (height % 2 == 0 || width % 2 == 0)	// Nir:	I think we already take care of this check on the main *******************************************************************************************************************************
-	//	return false;
+	if (height % 2 == 0 || width % 2 == 0)	// Another check of odd dimensions, just to be sure.
+		return false;
 	setStartingRandBoard();		//	Starting board is a board with "boxes" of walls and spaces in the center of each box. spaces at the Entrance and Exit as well
 
 	Stack stack;
 	stack.push(Point(1, 1));	// Start the stack with point (1,1).
 
-	int counter = 1;
 	while (!stack.isEmpty()) // Stack isn't empty
 	{
-		//cout << "Round " << counter++ << endl;
 		Point currP = stack.pop();		//	Remove top from stack.
 		board[currP.getY()][currP.getX()] = VISITED;	//	Mark on board that we've visited this point.
 
@@ -123,17 +110,14 @@ We continue until the stack is empty.
 		if (numOfUnvisitedNeighbors > 0)	//	If we have unvisited neighbors
 		{
 			int i = rand() % numOfUnvisitedNeighbors;	//	Choose the element in the array randomly.
-			int direction = unvisitedNeighArr[i];
+			int direction = unvisitedNeighArr[i];		// Each element in the array indicates a direction - so we choose a random direction
 			Point wallP = currP + direction;
 			Point neighborP = currP + direction;
-			neighborP = neighborP + direction;
-			//Point neighborP = currP + unvisitedNeighArr[i];	//	Within the array we have numbers corresponding to the enum values RIGHT, DOWN, LEFT, RIGHT. Pick the direction that was chosen randomly for the neighbor point.
-			//Point wallP = wallToRemove(currP, neighborP);
+			neighborP = neighborP + direction; // Add again because of wall between the two points
 			board[wallP.getY()][wallP.getX()] = EMPTY_SPACE; // Remove wall between currP and neighbor and set the space to empty.
 			stack.push(currP);
 			stack.push(neighborP);
 		}
-		// Do we need to delete something here?
 	}
 	cleanVisitedMarks();
 	return true;
@@ -170,7 +154,6 @@ void Board::cleanVisitedMarks()
 		}
 	}
 }
-
 
 
 
@@ -212,18 +195,17 @@ It creates a board built of "squares of walls", 3x3 squares with empty spaces in
 }
 void Board::findFreeNeighbors(Point& currP, int* unvisitedNeighArr, int& numOfUnvisitedNeighbors)
 {
-	/*numOfUnvisitedNeighbors = 0; */ // Already with the value 0 ****************************************************************************************************************************************************************************
+	numOfUnvisitedNeighbors = 0; // Set to 0 just to be sure
 	for (int i = 0; i < MAX_NEIGHBORS; i++)
 	{
 		Point p = currP + i;	//	i is RIGHT, DOWN, LEFT or UP, based on the enum in Point class
-		p = p + i; // Add another to create a distance of 2
-
+		p = p + i; // Add another to create a distance of 2, because when creating a board randomly, we have a wall between every two free points
 
 		if (p.rangeCheck(height, width) == true && board[p.getY()][p.getX()] == EMPTY_SPACE)	//	Check if point is within dimensions and if she is empty.
 				unvisitedNeighArr[numOfUnvisitedNeighbors++] = i;                              // the i through the enum indicates which neighbor
 	}
 }
-Point& Board::wallToRemove(Point& currP, Point& neighborP)
+Point Board::wallToRemove(Point& currP, Point& neighborP)
 /*
 This function receives two points, and determines what is the point between them.
 It checks the x values and y values separately, to see if they're equal or not.
@@ -244,8 +226,7 @@ If they're not equal, the returning value is minus 1 from the maximum of the two
 	else
 		y = maxNum(currP.getY(), neighborP.getY()) - 1;
 
-	Point res(x, y);	// INEFFICIENT: Can we use a move constructor?
-	return res;
+	return Point(x, y);	// INEFFICIENT: Can we use a move constructor?
 }
 int Board::maxNum(int a, int b)
 {
