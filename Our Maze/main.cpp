@@ -15,7 +15,6 @@ Note to dear tester: When we perform an exit due to invalid input, we were unsur
 #include "Maze.h"
 #include "Stack.h"
 #include "Point.h"
-#include <string.h>
 #include <iostream>
 using namespace std;
 
@@ -43,7 +42,11 @@ int main()
 		makeCustomBoard(maze);
 	else // User chose random creation.
 		board.makeRandBoard();
-		
+	cout << "\nThe board is: \n\n";
+		maze.printBoard();
+
+		cout << "\nThe solution is:\n\n";
+
 	if (maze.escapeMaze())
 		maze.printBoard();
 	else
@@ -117,7 +120,9 @@ In this function, the user chooses the parameters for his maze.
 If the creation method chosen is random, then the parameters must be odd.
 */
 {
+	cout << "Please enter hight: ";
 	cin >> height;
+
 	while (height < 3 || height>25 || (creationMethod == RANDOM && height % 2 == 0))	//	 Height range validity check.
 	{
 		if (creationMethod == RANDOM)
@@ -127,7 +132,9 @@ If the creation method chosen is random, then the parameters must be odd.
 	}
 	cout << endl;
 
+	cout << "Please enter width: ";
 	cin >> width;
+
 	while (width < 3 || width>80 || (creationMethod == RANDOM && width % 2 == 0))	//	Width range validity check.
 	{
 		if (creationMethod == RANDOM)
